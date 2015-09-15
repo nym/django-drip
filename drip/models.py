@@ -23,6 +23,14 @@ class Drip(models.Model):
 
     enabled = models.BooleanField(default=False)
 
+    MSG_TYPE_CHOICES = (
+        ('email', 'Email'),
+        ('sms', 'Text Message'),
+    )
+    msg_type = models.CharField(max_length=5,
+                                      choices=MSG_TYPE_CHOICES,
+                                      default="email")
+
     from_email = models.EmailField(null=True, blank=True,
         help_text='Set a custom from email.')
     from_email_name = models.CharField(max_length=150, null=True, blank=True,
@@ -57,6 +65,7 @@ class SentDrip(models.Model):
     drip = models.ForeignKey('drip.Drip', related_name='sent_drips')
     user = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), related_name='sent_drips')
 
+    msg_type = models.TextField(null=True)
     subject = models.TextField()
     body = models.TextField()
     from_email = models.EmailField(
